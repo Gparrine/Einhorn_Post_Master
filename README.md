@@ -97,7 +97,7 @@ VITE_API_URL=https://your-api-host.example.com npm run build
 
 ## Logo
 
-The Einhorn heraldic logo lives at `frontend/src/assets/einhorn-logo.svg` (also in `design/`). To use your original PNG instead, add `frontend/src/assets/einhorn-logo.png` and update the import in `frontend/src/components/Header.tsx`.
+The Einhorn logo is at `frontend/src/assets/einhorn_logo_yellow_on_transparent_large.png`.
 
 ## Project Structure
 
