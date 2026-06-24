@@ -21,28 +21,65 @@ Once GitHub Pages is enabled, the app will be available at:
 
 **https://gparrine.github.io/einhorn_post_master/**
 
-## Quick Start (Local Development)
+## Quick Start (Local Preview)
 
-### 1. Backend API
+**Easiest way — one command from the repo root:**
 
 ```bash
-cd backend
-cp .env.example .env
-npm install
+git checkout cursor/einhorn-postmaster-b8ba   # if not already on this branch
+npm run install:all                           # first time only
 npm run dev
 ```
 
-The API runs on **http://localhost:3001**. With `DEMO_MODE=true` (the default in `.env.example`), posts and AI refinement are simulated so you can test the full UI without API keys.
+Then open **http://localhost:5173** in your browser.
 
-### 2. Frontend
+This starts both the frontend and backend together. Demo mode is enabled by default, so you can test AI refine and posting without API keys.
+
+### Manual setup (two terminals)
+
+**Terminal 1 — Backend API**
+
+```bash
+cd backend
+cp .env.example .env    # first time only
+npm install             # first time only
+npm run dev
+```
+
+The API runs on **http://localhost:3001**.
+
+**Terminal 2 — Frontend**
 
 ```bash
 cd frontend
-npm install
+npm install             # first time only
 npm run dev
 ```
 
 Open **http://localhost:5173**. The Vite dev server proxies `/api` requests to the backend.
+
+### Production-style preview
+
+```bash
+# Terminal 1: backend (still required for buttons/AI to work)
+cd backend && npm run dev
+
+# Terminal 2: build + preview
+npm run preview         # from repo root
+```
+
+Open **http://localhost:4173**.
+
+## Troubleshooting preview
+
+| Problem | Fix |
+|---|---|
+| Blank page or red Vite error about logo PNG | Make sure `frontend/src/assets/einhorn_logo_yellow_on_transparent_large.png` exists, then restart the dev server |
+| `npm run dev` fails at repo root (old setup) | Use the new root command above, or `cd frontend` first |
+| Buttons / AI do nothing | Backend must be running on port 3001 in a separate terminal |
+| `EADDRINUSE` port already in use | Stop old servers (`Ctrl+C`) or run `lsof -ti:5173,3001 \| xargs kill` |
+| Changes not showing | Hard refresh the browser (`Ctrl+Shift+R`) or restart `npm run dev` |
+| GitHub Pages URL 404 | Merge the PR to `main` and enable Pages (Settings → Pages → GitHub Actions) |
 
 ## Configuration
 
