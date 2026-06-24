@@ -1,4 +1,4 @@
-import einhornLogo from '../assets/einhorn-logo.svg'
+import einhornLogo from '../assets/einhorn_logo_yellow_on_transparent_large.png'
 
 export default function Header() {
   return (
