@@ -17,11 +17,28 @@ The frontend calls the backend over HTTPS. API keys live **only** on Render — 
 
 ### 1. Create the Render service
 
-1. Sign in at [render.com](https://render.com) (GitHub login works well).
-2. Click **New → Blueprint**.
-3. Connect the **Einhorn_Post_Master** GitHub repo.
-4. Render reads [`render.yaml`](../render.yaml) and creates **einhorn-postmaster-api**.
-5. Click **Apply** and wait for the first deploy to finish (about 2–3 minutes).
+**Option A — Web Service (recommended if you don't see Blueprint)**
+
+1. Sign in at [render.com](https://render.com) → **New → Web Service**
+2. Connect the **Einhorn_Post_Master** GitHub repo, branch **`main`**
+3. Use these settings:
+
+| Setting | Value |
+|---|---|
+| Root Directory | `backend` |
+| Build Command | `npm ci --include=dev && npm run build` |
+| Start Command | `npm start` |
+| Health Check Path | `/api/health` |
+
+> **Important:** The build command must include `--include=dev`. If `NODE_ENV=production` is set, a plain `npm ci` skips TypeScript and the build fails silently — the health page will spin forever.
+
+**Option B — Blueprint**
+
+1. **New → Blueprint** → connect this repo
+2. Render reads [`render.yaml`](../render.yaml) and creates **einhorn-postmaster-api**
+3. Click **Apply**
+
+Wait for the deploy to finish (about 2–3 minutes). Check the **Logs** tab — you should see `Einhorn Postmaster API running on port ...`
 
 ### 2. Confirm the API is live
 
@@ -113,6 +130,8 @@ VITE_API_URL=https://einhorn-postmaster-api.onrender.com npm run dev
 
 | Symptom | Fix |
 |---|---|
+| Health page spins / never loads | Build likely failed — check Render **Logs**. Set Build Command to `npm ci --include=dev && npm run build`, then **Manual Deploy → Clear build cache & deploy** |
+| Logs show `tsc: not found` | Same fix — TypeScript is a devDependency and was skipped because `NODE_ENV=production` |
 | Pages site loads but API calls fail | Set `VITE_API_URL` repo variable; redeploy Pages workflow |
 | CORS error in browser console | Add your origin to `ALLOWED_ORIGINS` on Render |
 | API health URL times out | Wake Render service (first request after sleep is slow) |

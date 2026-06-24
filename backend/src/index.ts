@@ -14,6 +14,10 @@ const allowedOrigins = process.env.ALLOWED_ORIGINS
 app.use(cors({ origin: allowedOrigins, credentials: true }))
 app.use(express.json({ limit: '1mb' }))
 
+app.get('/', (_req, res) => {
+  res.json({ status: 'ok', service: 'einhorn-postmaster', health: '/api/health' })
+})
+
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', service: 'einhorn-postmaster' })
 })
