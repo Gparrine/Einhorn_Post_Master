@@ -15,6 +15,10 @@ A mini-app for the **Einhorn** martial arts club that lets you compose a post on
 - **Share tools** — copy a direct link or iframe embed code
 - **Responsive design** — dark grey, hunter green, and gold color scheme with Germania One (title) and Oldenburg (body) fonts
 
+## Project record
+
+Session status and resume guide: **[docs/EPM.md](docs/EPM.md)**
+
 ## Live App
 
 Once deployed, the app is available at:
