@@ -1,11 +1,11 @@
-import logoPlaceholder from '../assets/logo-placeholder.svg'
+import einhornLogo from '../assets/einhorn-logo.svg'
 
 export default function Header() {
   return (
     <header className="header">
       <div className="header-brand">
         <img
-          src={logoPlaceholder}
+          src={einhornLogo}
           alt="Einhorn logo"
           className="header-logo"
         />

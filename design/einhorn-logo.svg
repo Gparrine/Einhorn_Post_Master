@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" role="img" aria-label="Einhorn logo">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C547"/>
+      <stop offset="50%" stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#B8941F"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Vertical sword (unicorn horn) -->
+  <g fill="url(#gold)" stroke="#000" stroke-width="2">
+    <rect x="96" y="8" width="8" height="118" rx="1"/>
+    <rect x="88" y="118" width="24" height="6" rx="1"/>
+    <rect x="92" y="124" width="16" height="18" rx="2"/>
+    <circle cx="100" cy="148" r="5"/>
+  </g>
+
+  <!-- Shield -->
+  <path
+    d="M100 28 L168 52 L168 118 C168 162 138 198 100 214 C62 198 32 162 32 118 L32 52 Z"
+    fill="#000"
+    stroke="url(#gold)"
+    stroke-width="6"
+  />
+  <path
+    d="M100 38 L158 58 L158 116 C158 152 132 184 100 198 C68 184 42 152 42 116 L42 58 Z"
+    fill="url(#gold)"
+  />
+  <path
+    d="M100 108 L158 116 L158 116 C158 152 132 184 100 198 C68 184 42 152 42 116 L42 116 Z"
+    fill="#000"
+  />
+
+  <!-- Crossed swords behind unicorn -->
+  <g fill="url(#gold)" stroke="#000" stroke-width="1.5">
+    <!-- Curved saber (upper right) -->
+    <path d="M118 72 C132 58 150 48 162 42 L160 48 C148 56 132 68 122 82 Z"/>
+    <rect x="112" y="78" width="5" height="28" transform="rotate(35 114 92)" rx="1"/>
+    <rect x="104" y="98" width="10" height="4" transform="rotate(35 109 100)" rx="1"/>
+
+    <!-- Straight sword (upper left) -->
+    <rect x="78" y="56" width="4" height="52" transform="rotate(-38 80 82)" rx="1"/>
+    <rect x="68" y="96" width="12" height="4" transform="rotate(-38 74 98)" rx="1"/>
+    <circle cx="66" cy="102" r="3" transform="rotate(-38 66 102)"/>
+  </g>
+
+  <!-- Buckler -->
+  <circle cx="100" cy="132" r="16" fill="url(#gold)" stroke="#000" stroke-width="2"/>
+  <circle cx="100" cy="132" r="6" fill="#000" stroke="url(#gold)" stroke-width="1.5"/>
+  <circle cx="92" cy="128" r="1.5" fill="#000"/>
+  <circle cx="108" cy="128" r="1.5" fill="#000"/>
+
+  <!-- Unicorn head -->
+  <g fill="url(#gold)" stroke="#000" stroke-width="2" stroke-linejoin="round">
+    <!-- Neck -->
+    <path d="M72 118 C78 108 88 102 98 104 C104 105 108 112 106 122 C104 132 92 138 82 134 C74 130 70 124 72 118 Z"/>
+    <!-- Head -->
+    <path d="M98 104 C112 98 128 100 134 112 C138 120 136 128 128 132 C118 136 104 132 98 124 C94 118 94 110 98 104 Z"/>
+    <!-- Snout -->
+    <path d="M128 118 C134 118 138 122 136 126 C134 130 128 130 124 126 L128 118 Z"/>
+    <!-- Ear -->
+    <path d="M108 98 L114 86 L118 98 Z"/>
+    <!-- Eye -->
+    <circle cx="122" cy="114" r="2.5" fill="#000" stroke="none"/>
+    <!-- Mane -->
+    <path d="M88 108 C82 102 78 94 76 86" fill="none" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M84 114 C78 110 74 102 72 94" fill="none" stroke-width="2" stroke-linecap="round"/>
+    <path d="M80 120 C76 118 72 112 70 106" fill="none" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>
