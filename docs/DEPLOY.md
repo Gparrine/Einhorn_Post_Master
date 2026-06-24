@@ -26,11 +26,11 @@ The frontend calls the backend over HTTPS. API keys live **only** on Render — 
 | Setting | Value |
 |---|---|
 | Root Directory | `backend` |
-| Build Command | `npm ci --include=dev && npm run build` |
+| Build Command | `npm ci` |
 | Start Command | `npm start` |
 | Health Check Path | `/api/health` |
 
-> **Important:** The build command must include `--include=dev`. If `NODE_ENV=production` is set, a plain `npm ci` skips TypeScript and the build fails silently — the health page will spin forever.
+The start script runs TypeScript directly via `tsx` — no compile step, so `NODE_ENV=production` cannot break the build.
 
 **Option B — Blueprint**
 
@@ -130,8 +130,8 @@ VITE_API_URL=https://einhorn-postmaster-api.onrender.com npm run dev
 
 | Symptom | Fix |
 |---|---|
-| Health page spins / never loads | Build likely failed — check Render **Logs**. Set Build Command to `npm ci --include=dev && npm run build`, then **Manual Deploy → Clear build cache & deploy** |
-| Logs show `tsc: not found` | Same fix — TypeScript is a devDependency and was skipped because `NODE_ENV=production` |
+| Health page spins / never loads | Check Render **Logs** for startup errors. Build Command should be `npm ci`, Start Command `npm start`. Redeploy with **Clear build cache** |
+| Build failed with exit status 2 | Set Build Command to `npm ci` only (not `npm run build`). The app runs TypeScript via `tsx` at start time |
 | Pages site loads but API calls fail | Set `VITE_API_URL` repo variable; redeploy Pages workflow |
 | CORS error in browser console | Add your origin to `ALLOWED_ORIGINS` on Render |
 | API health URL times out | Wake Render service (first request after sleep is slow) |
