@@ -26,6 +26,6 @@ app.use((err: Error, _req: express.Request, res: express.Response, _next: expres
   res.status(500).json({ error: err.message || 'Internal server error' })
 })
 
-app.listen(PORT, () => {
+app.listen(Number(PORT), '0.0.0.0', () => {
   console.log(`Einhorn Postmaster API running on port ${PORT}`)
 })

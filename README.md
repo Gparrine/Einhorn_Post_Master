@@ -17,9 +17,19 @@ A mini-app for the **Einhorn** martial arts club that lets you compose a post on
 
 ## Live App
 
-Once GitHub Pages is enabled, the app will be available at:
+Once deployed, the app is available at:
 
 **https://gparrine.github.io/einhorn_post_master/**
+
+### First-time deployment (Step 1)
+
+Follow **[docs/DEPLOY.md](docs/DEPLOY.md)** to:
+
+1. Deploy the backend API to Render using [`render.yaml`](render.yaml)
+2. Set the `VITE_API_URL` repository variable on GitHub
+3. Enable GitHub Pages (Source: **GitHub Actions**)
+
+Until the backend is deployed, the live site cannot reach the API.
 
 ## Quick Start (Local Preview)
 
@@ -107,30 +117,21 @@ When posting to Meetup, the app looks for a date in your post text and matches i
 
 ## Deployment
 
+See **[docs/DEPLOY.md](docs/DEPLOY.md)** for the full Step 1 walkthrough (Render + GitHub Pages).
+
 ### Frontend (GitHub Pages)
 
 1. Enable GitHub Pages for this repo (Settings → Pages → Source: **GitHub Actions**)
-2. Optionally set a repository variable `VITE_API_URL` to your deployed backend URL
+2. Set repository variable `VITE_API_URL` to your Render backend URL (no trailing slash)
 3. Push to `main` — the workflow builds and deploys automatically
 
-### Backend
+### Backend (Render)
 
-Deploy the `backend/` folder to any Node.js host (Render, Railway, Fly.io, etc.):
+Deploy via Blueprint using [`render.yaml`](render.yaml):
 
-```bash
-cd backend
-npm install
-npm run build
-npm start
-```
-
-Set all environment variables from `.env.example` on your host, and add your GitHub Pages URL to `ALLOWED_ORIGINS`.
-
-For production frontend builds, set:
-
-```bash
-VITE_API_URL=https://your-api-host.example.com npm run build
-```
+1. Render dashboard → **New → Blueprint** → connect this repo
+2. Set environment variables on the service (see [`backend/.env.example`](backend/.env.example))
+3. Confirm health check: `https://your-service.onrender.com/api/health`
 
 ## Logo
 
