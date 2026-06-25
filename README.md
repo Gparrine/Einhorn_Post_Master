@@ -25,6 +25,10 @@ Facebook setup: **[docs/FACEBOOK.md](docs/FACEBOOK.md)**
 
 Gymdesk setup: **[docs/GYMDESK.md](docs/GYMDESK.md)**
 
+Meetup setup: **[docs/MEETUP.md](docs/MEETUP.md)**
+
+**Instructor handoff:** **[docs/INSTRUCTOR_GUIDE.md](docs/INSTRUCTOR_GUIDE.md)**
+
 ## Live App
 
 Once deployed, the app is available at:
