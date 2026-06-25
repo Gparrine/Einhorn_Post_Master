@@ -9,9 +9,11 @@ import StatusBar from './components/StatusBar'
 import SharePanel from './components/SharePanel'
 import { postToPlatform, refineWithAI } from './api/client'
 import { copyToClipboard } from './utils/clipboard'
+import { navigateTab, openTabPlaceholder, openUrlInNewTab } from './utils/openTab'
 import type { Platform, PlatformState, PlatformStates } from './types'
 
 const PLATFORMS: Platform[] = ['facebook', 'discord', 'meetup', 'gymdesk']
+const MANUAL_PLATFORMS: Platform[] = ['facebook', 'meetup', 'gymdesk']
 
 const INITIAL_STATES: PlatformStates = {
   discord: { status: 'idle' },
@@ -61,7 +63,7 @@ function App() {
     }
   }
 
-  const sendToPlatform = async (platform: Platform) => {
+  const sendToPlatform = async (platform: Platform, preOpenedTab?: Window | null) => {
     if (!plainText.trim()) {
       setStatusType('error')
       setStatusMessage('Please enter post text before sending.')
@@ -70,7 +72,7 @@ function App() {
 
     updatePlatform(platform, { status: 'loading', error: undefined })
     setStatusType('info')
-    setStatusMessage(`Awaiting confirmation for ${platformLabel(platform)}…`)
+    setStatusMessage(`Sending to ${platformLabel(platform)}…`)
 
     try {
       const result = await postToPlatform(platform, htmlContent, plainText)
@@ -80,7 +82,10 @@ function App() {
           try {
             await copyToClipboard(result.copyText)
             if (result.postUrl) {
-              window.open(result.postUrl, '_blank', 'noopener,noreferrer')
+              const opened = navigateTab(preOpenedTab, result.postUrl)
+              if (!opened) {
+                openUrlInNewTab(result.postUrl)
+              }
             }
           } catch {
             updatePlatform(platform, {
@@ -102,11 +107,17 @@ function App() {
               : `Posted successfully to ${platformLabel(platform)}.`),
         )
       } else {
+        if (preOpenedTab && !preOpenedTab.closed) {
+          preOpenedTab.close()
+        }
         updatePlatform(platform, { status: 'error', error: result.error })
         setStatusType('error')
         setStatusMessage(result.error || `Failed to post to ${platformLabel(platform)}.`)
       }
     } catch (err) {
+      if (preOpenedTab && !preOpenedTab.closed) {
+        preOpenedTab.close()
+      }
       const message = err instanceof Error ? err.message : 'Unknown error'
       updatePlatform(platform, { status: 'error', error: message })
       setStatusType('error')
@@ -114,24 +125,43 @@ function App() {
     }
   }
 
-  const handleConfirmSend = async () => {
+  const handleConfirmSend = () => {
     if (!confirmTarget) return
 
+    const target = confirmTarget
     setIsSending(true)
     setConfirmTarget(null)
 
-    if (confirmTarget === 'all') {
-      setStatusType('info')
-      setStatusMessage('Sending to all platforms…')
+    const platformsToSend: Platform[] = target === 'all' ? PLATFORMS : [target]
+    const manualTabs: Partial<Record<Platform, Window | null>> = {}
 
-      for (const platform of PLATFORMS) {
-        await sendToPlatform(platform)
+    for (const platform of platformsToSend) {
+      if (MANUAL_PLATFORMS.includes(platform)) {
+        manualTabs[platform] = openTabPlaceholder()
       }
-    } else {
-      await sendToPlatform(confirmTarget)
     }
 
-    setIsSending(false)
+    void (async () => {
+      try {
+        if (target === 'all') {
+          setStatusType('info')
+          setStatusMessage('Sending to all platforms…')
+
+          for (const platform of PLATFORMS) {
+            await sendToPlatform(platform, manualTabs[platform])
+          }
+
+          setStatusType('success')
+          setStatusMessage(
+            'Sent to all platforms. Paste on Facebook, Meetup, and Gymdesk in the tabs that opened.',
+          )
+        } else {
+          await sendToPlatform(target, manualTabs[target])
+        }
+      } finally {
+        setIsSending(false)
+      }
+    })()
   }
 
   const requestSend = (target: Platform | 'all') => {
