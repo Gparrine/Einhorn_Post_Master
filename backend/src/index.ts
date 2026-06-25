@@ -25,6 +25,7 @@ app.get('/api/health', (_req, res) => {
     service: 'einhorn-postmaster',
     gemini: hasCredentials('gemini'),
     discord: hasCredentials('discord'),
+    facebook: hasCredentials('facebook'),
     demoMode: config.demoMode,
   })
 })

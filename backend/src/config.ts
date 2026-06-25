@@ -46,8 +46,7 @@ export const config = {
     channelId: process.env.DISCORD_CHANNEL_ID || '',
   },
   facebook: {
-    accessToken: process.env.FACEBOOK_ACCESS_TOKEN || '',
-    groupId: process.env.FACEBOOK_GROUP_ID || '',
+    groupUrl: process.env.FACEBOOK_GROUP_URL || '',
   },
   meetup: {
     apiKey: process.env.MEETUP_API_KEY || '',
@@ -68,7 +67,7 @@ export function hasCredentials(service: 'discord' | 'facebook' | 'meetup' | 'gym
     case 'discord':
       return !!config.discord.botToken && !!config.discord.channelId
     case 'facebook':
-      return !!config.facebook.accessToken && !!config.facebook.groupId
+      return !!config.facebook.groupUrl
     case 'meetup':
       return !!config.meetup.apiKey && !!config.meetup.groupUrlname
     case 'gymdesk':

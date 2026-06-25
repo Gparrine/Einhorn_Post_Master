@@ -19,6 +19,11 @@ export default function ConfirmDialog({ target, onConfirm, onCancel }: ConfirmDi
       ? 'all four platforms (Facebook, Discord, Meetup, and Gymdesk)'
       : LABELS[target]
 
+  const facebookNote =
+    target === 'facebook' || target === 'all'
+      ? ' Facebook posts are copied to your clipboard and your group opens in a new tab — you paste and publish there (Meta no longer allows automated group posting).'
+      : ''
+
   return (
     <div className="dialog-backdrop" onClick={onCancel}>
       <div className="dialog" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
@@ -26,6 +31,7 @@ export default function ConfirmDialog({ target, onConfirm, onCancel }: ConfirmDi
         <p className="dialog-body">
           Are you sure you want to send this post to{' '}
           <strong>{destination}</strong>?
+          {facebookNote}
         </p>
         <div className="dialog-actions">
           <button type="button" className="dialog-btn cancel" onClick={onCancel}>

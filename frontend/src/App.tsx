@@ -7,6 +7,7 @@ import ConfirmDialog from './components/ConfirmDialog'
 import StatusBar from './components/StatusBar'
 import SharePanel from './components/SharePanel'
 import { postToPlatform, refineWithAI } from './api/client'
+import { copyToClipboard } from './utils/clipboard'
 import type { Platform, PlatformState, PlatformStates } from './types'
 
 const PLATFORMS: Platform[] = ['facebook', 'discord', 'meetup', 'gymdesk']
@@ -74,9 +75,31 @@ function App() {
       const result = await postToPlatform(platform, htmlContent, plainText)
 
       if (result.success) {
+        if (result.mode === 'manual' && result.copyText) {
+          try {
+            await copyToClipboard(result.copyText)
+            if (result.postUrl) {
+              window.open(result.postUrl, '_blank', 'noopener,noreferrer')
+            }
+          } catch {
+            updatePlatform(platform, {
+              status: 'error',
+              error: 'Could not copy text to clipboard. Copy manually from the editor.',
+            })
+            setStatusType('error')
+            setStatusMessage('Could not copy post text to clipboard.')
+            return
+          }
+        }
+
         updatePlatform(platform, { status: 'success', postUrl: result.postUrl })
         setStatusType('success')
-        setStatusMessage(`Posted successfully to ${platformLabel(platform)}.`)
+        setStatusMessage(
+          result.instructions ||
+            (result.mode === 'manual'
+              ? `Copied for ${platformLabel(platform)}. Paste and publish manually.`
+              : `Posted successfully to ${platformLabel(platform)}.`),
+        )
       } else {
         updatePlatform(platform, { status: 'error', error: result.error })
         setStatusType('error')

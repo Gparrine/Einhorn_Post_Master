@@ -13,6 +13,9 @@ export type PlatformStates = Record<Platform, PlatformState>
 export interface PostResult {
   platform: Platform
   success: boolean
+  mode?: 'manual'
+  copyText?: string
+  instructions?: string
   postUrl?: string
   error?: string
 }

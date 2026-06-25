@@ -7,11 +7,19 @@ import { canUseService } from '../config.js'
 
 type Platform = 'discord' | 'facebook' | 'meetup' | 'gymdesk'
 
+interface PostHandlerResult {
+  postId: string
+  postUrl?: string
+  mode?: 'manual'
+  copyText?: string
+  instructions?: string
+}
+
 const router = Router()
 
 const postHandlers: Record<
   Platform,
-  (content: string, plainText: string) => Promise<{ postId: string; postUrl?: string }>
+  (content: string, plainText: string) => Promise<PostHandlerResult>
 > = {
   discord: postToDiscord,
   facebook: postToFacebook,
@@ -54,9 +62,9 @@ router.post('/:platform', async (req, res, next) => {
     }
 
     const handler = postHandlers[platform]
-    const { postId, postUrl } = await handler(content || plainText, plainText)
+    const result = await handler(content || plainText, plainText)
 
-    const verification = await verifyHandlers[platform](postId)
+    const verification = await verifyHandlers[platform](result.postId)
 
     if (!verification.verified) {
       res.json({
@@ -67,7 +75,20 @@ router.post('/:platform', async (req, res, next) => {
       return
     }
 
-    res.json({ success: true, platform, postId, postUrl })
+    const payload: Record<string, unknown> = {
+      success: true,
+      platform,
+      postId: result.postId,
+      postUrl: result.postUrl,
+    }
+
+    if (result.mode === 'manual') {
+      payload.mode = result.mode
+      payload.copyText = result.copyText
+      payload.instructions = result.instructions
+    }
+
+    res.json(payload)
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Post failed'
     res.json({

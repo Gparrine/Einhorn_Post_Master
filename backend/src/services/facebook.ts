@@ -1,52 +1,67 @@
-import fetch from 'node-fetch'
 import { config, hasCredentials } from '../config.js'
 
-interface PostResult {
+export interface FacebookPostResult {
   postId: string
-  postUrl?: string
+  postUrl: string
+  mode: 'manual'
+  copyText: string
+  instructions: string
 }
 
-export async function postToFacebook(content: string, plainText: string): Promise<PostResult> {
+export async function postToFacebook(content: string, plainText: string): Promise<FacebookPostResult> {
+  const copyText = formatForFacebook(content, plainText)
+  const groupUrl = config.facebook.groupUrl
+
+  if (!groupUrl) {
+    throw new Error(
+      'Facebook group URL is not configured. Set FACEBOOK_GROUP_URL on the backend (Render environment).',
+    )
+  }
+
   if (config.demoMode && !hasCredentials('facebook')) {
-    await delay(1400)
-    return { postId: `demo-facebook-${Date.now()}`, postUrl: 'https://facebook.com/groups/demo' }
+    await delay(900)
+    return {
+      postId: `demo-facebook-${Date.now()}`,
+      postUrl: 'https://www.facebook.com/groups/demo',
+      mode: 'manual',
+      copyText,
+      instructions: 'Demo mode: copy the post and paste it into your Facebook group manually.',
+    }
   }
 
-  const { accessToken, groupId } = config.facebook
-  const message = plainText.slice(0, 63206)
-
-  const response = await fetch(
-    `https://graph.facebook.com/v19.0/${groupId}/feed`,
-    {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message, access_token: accessToken }),
-    },
-  )
-
-  if (!response.ok) {
-    const err = (await response.json().catch(() => ({}))) as { error?: { message?: string } }
-    throw new Error(err.error?.message || `Facebook API error (${response.status})`)
-  }
-
-  const data = (await response.json()) as { id: string }
   return {
-    postId: data.id,
-    postUrl: `https://facebook.com/${data.id}`,
+    postId: `manual-facebook-${Date.now()}`,
+    postUrl: groupUrl,
+    mode: 'manual',
+    copyText,
+    instructions:
+      'Post text copied to clipboard. Paste into the Facebook group composer and click Post.',
   }
 }
 
 export async function verifyFacebookPost(postId: string): Promise<{ verified: boolean; error?: string }> {
-  if (postId.startsWith('demo-')) return { verified: true }
+  if (postId.startsWith('demo-') || postId.startsWith('manual-')) {
+    return config.facebook.groupUrl
+      ? { verified: true }
+      : { verified: false, error: 'Facebook group URL is not configured.' }
+  }
 
-  const { accessToken } = config.facebook
+  return { verified: false, error: 'Unknown Facebook post reference.' }
+}
 
-  const response = await fetch(
-    `https://graph.facebook.com/v19.0/${postId}?fields=id&access_token=${accessToken}`,
-  )
+function formatForFacebook(html: string, plainText: string): string {
+  const text = plainText.trim() || stripHtml(html)
+  return text.slice(0, 63206)
+}
 
-  if (response.ok) return { verified: true }
-  return { verified: false, error: 'Could not verify Facebook post was published.' }
+function stripHtml(html: string): string {
+  return html
+    .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/<\/p>/gi, '\n\n')
+    .replace(/<\/li>/gi, '\n')
+    .replace(/<[^>]+>/g, '')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim()
 }
 
 function delay(ms: number): Promise<void> {

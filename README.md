@@ -21,6 +21,8 @@ Session status and resume guide: **[docs/EPM.md](docs/EPM.md)**
 
 Gemini setup: **[docs/GEMINI.md](docs/GEMINI.md)**
 
+Facebook setup: **[docs/FACEBOOK.md](docs/FACEBOOK.md)**
+
 ## Live App
 
 Once deployed, the app is available at:
