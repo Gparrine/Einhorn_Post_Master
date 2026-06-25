@@ -35,8 +35,8 @@ Configured on **einhorn-postmaster-api**:
 
 | Variable | Status |
 |---|---|
-| `DISCORD_BOT_TOKEN` | ✅ Set (regenerate if ever exposed in chat) |
-| `DISCORD_CHANNEL_ID` | ✅ `956800108375191639` (`#meetings-plans`) |
+| `DISCORD_BOT_TOKEN` | ✅ Set on Render (rotate if ever exposed) |
+| `DISCORD_CHANNEL_ID` | ✅ Set on Render (`#meetings-plans`) |
 | `DEMO_MODE` | ✅ `false` (real Discord posts; other platforms need credentials or will error) |
 | `ALLOWED_ORIGINS` | Should include `https://gparrine.github.io` |
 | `GEMINI_API_KEY` | ❌ Set on Render to enable Refine with AI |
@@ -61,9 +61,9 @@ Configured on **einhorn-postmaster-api**:
 
 ## Security reminders
 
-- **Discord bot token was exposed in chat once** — should have been reset; if not done yet, reset in Discord Developer Portal → Bot → Reset Token, then update Render only.
+- Rotate Discord bot tokens and API keys if they are ever exposed outside Render.
 - Never commit `.env`, tokens, or API keys to GitHub.
-- Channel IDs are fine to document; tokens are not.
+- Keep channel IDs and group URLs in Render or private notes — avoid putting them in public docs when possible.
 
 ---
 
