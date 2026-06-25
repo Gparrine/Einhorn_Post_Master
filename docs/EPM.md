@@ -39,7 +39,8 @@ Configured on **einhorn-postmaster-api**:
 | `DISCORD_CHANNEL_ID` | ✅ `956800108375191639` (`#meetings-plans`) |
 | `DEMO_MODE` | ✅ `false` (real Discord posts; other platforms need credentials or will error) |
 | `ALLOWED_ORIGINS` | Should include `https://gparrine.github.io` |
-| `GEMINI_API_KEY` | ❌ Not set |
+| `GEMINI_API_KEY` | ❌ Set on Render to enable Refine with AI |
+| `GEMINI_SYSTEM_PROMPT` | Optional override — default uses [`backend/prompts/einhorn-gem.prompt.md`](../backend/prompts/einhorn-gem.prompt.md) |
 | Facebook / Meetup / Gymdesk vars | ❌ Not set |
 
 **Local dev:** copy [`backend/.env.example`](../backend/.env.example) → `backend/.env` (gitignored).
