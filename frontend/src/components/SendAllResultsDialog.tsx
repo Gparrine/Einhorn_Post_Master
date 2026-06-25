@@ -1,4 +1,5 @@
 import type { Platform } from '../types'
+import { openUrlInNewTab } from '../utils/openTab'
 
 export interface ManualPlatformLink {
   platform: Platform
@@ -19,7 +20,7 @@ export default function SendAllResultsDialog({
 }: SendAllResultsDialogProps) {
   const openAll = () => {
     for (const link of manualLinks) {
-      window.open(link.url, '_blank')
+      openUrlInNewTab(link.url)
     }
   }
 

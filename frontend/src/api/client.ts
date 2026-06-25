@@ -35,5 +35,5 @@ export async function postToPlatform(platform: Platform, content: string, plainT
 }
 
 export async function verifyPost(platform: Platform, postId: string): Promise<{ verified: boolean; error?: string }> {
-  return request(`/api/verify/${platform}/${encodeURIComponent(postId)}`)
+  return request(`/api/post/verify/${platform}/${encodeURIComponent(postId)}`)
 }

@@ -46,7 +46,7 @@ export async function verifyDiscordPost(postId: string): Promise<{ verified: boo
   const { botToken, channelId } = config.discord
 
   const response = await fetch(
-    `https://discord.com/api/v10/channels/${channelId}/messages/${postId}`,
+    `https://discord.com/api/v10/channels/${channelId}/messages/${encodeURIComponent(postId)}`,
     { headers: { Authorization: `Bot ${botToken}` } },
   )
 
