@@ -57,7 +57,7 @@ If something goes wrong, a **red X** appears with a short error message at the b
 1. Write: `June 28 — longsword fundamentals, partner drills, open sparring`
 2. Click **Refine with AI** and review
 3. Click **Send to All**
-4. Confirm each send; paste on Facebook, Meetup, and Gymdesk when those tabs open
+4. Confirm the send; use the dialog links to open Facebook, Meetup, and Gymdesk and paste on each
 5. Discord goes live on its own
 
 That’s it — one draft, four channels.
