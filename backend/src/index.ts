@@ -4,6 +4,7 @@ import cors from 'cors'
 import helmet from 'helmet'
 import refineRouter from './routes/refine.js'
 import postRouter from './routes/post.js'
+import { requireApiAccessKey } from './middleware/apiKeyAuth.js'
 import { config } from './config.js'
 
 const app = express()
@@ -20,7 +21,7 @@ app.use(
     crossOriginEmbedderPolicy: false,
   }),
 )
-app.use(cors({ origin: allowedOrigins, credentials: false }))
+app.use(cors({ origin: allowedOrigins, credentials: false, allowedHeaders: ['Content-Type', 'X-API-Key'] }))
 app.use(express.json({ limit: '1mb' }))
 
 app.get('/', (_req, res) => {
@@ -31,8 +32,8 @@ app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', service: 'einhorn-postmaster' })
 })
 
-app.use('/api/refine', refineRouter)
-app.use('/api/post', postRouter)
+app.use('/api/refine', requireApiAccessKey, refineRouter)
+app.use('/api/post', requireApiAccessKey, postRouter)
 
 app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error(err)

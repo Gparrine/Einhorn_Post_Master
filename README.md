@@ -119,6 +119,7 @@ Copy `backend/.env.example` to `backend/.env` and fill in your credentials:
 | `MEETUP_GROUP_URLNAME` | Meetup group URL slug (required for Meetup) |
 | `MEETUP_API_KEY` | Meetup OAuth bearer token (optional — enables automatic event description updates) |
 | `GYMDESK_OPEN_URL` | Gymdesk URL to open after copy (manual-assist) |
+| `API_ACCESS_KEY` | Optional shared key — requires `X-API-Key` header on API routes (speed bump) |
 | `DEMO_MODE` | Set `false` when real credentials are configured |
 
 Set `DEMO_MODE=false` once your API keys are in place.
@@ -134,7 +135,7 @@ See **[docs/DEPLOY.md](docs/DEPLOY.md)** for the full Step 1 walkthrough (Render
 ### Frontend (GitHub Pages)
 
 1. Enable GitHub Pages for this repo (Settings → Pages → Source: **GitHub Actions**)
-2. Set repository variable `VITE_API_URL` to your Render backend URL (no trailing slash)
+2. Set repository variables `VITE_API_URL` and `VITE_API_ACCESS_KEY` (same value as Render `API_ACCESS_KEY`)
 3. Push to `main` — the workflow builds and deploys automatically
 
 ### Backend (Render)

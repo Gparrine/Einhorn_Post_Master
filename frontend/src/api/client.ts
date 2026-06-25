@@ -1,11 +1,22 @@
 import type { Platform, PostResult, RefineResult } from '../types'
 
 const API_BASE = import.meta.env.VITE_API_URL || ''
+const API_ACCESS_KEY = import.meta.env.VITE_API_ACCESS_KEY || ''
+
+function apiHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  }
+  if (API_ACCESS_KEY) {
+    headers['X-API-Key'] = API_ACCESS_KEY
+  }
+  return headers
+}
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE}${path}`, {
     headers: {
-      'Content-Type': 'application/json',
+      ...apiHeaders(),
       ...options?.headers,
     },
     ...options,
