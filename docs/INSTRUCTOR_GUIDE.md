@@ -48,7 +48,7 @@ If something goes wrong, a **red X** appears with a short error message at the b
 
 - **Include the date in the post** so Meetup and Gymdesk can match the right class.
 - **Refine with AI** works best when you’ve already noted the date and main activities — it fills in the rest.
-- **Send to All** is handy when you want every channel updated. It opens three tabs at once (Facebook, Meetup, Gymdesk) — allow pop-ups if they don’t appear.
+- **Send to All** posts to Discord automatically, copies your text once, then shows **Open Facebook**, **Open Meetup**, and **Open Gymdesk** buttons — click each link, paste, and save.
 
 ---
 

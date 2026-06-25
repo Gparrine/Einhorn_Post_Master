@@ -628,6 +628,50 @@ body {
   background: var(--color-gold-light);
 }
 
+.send-all-results .send-all-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1rem 0 0.75rem;
+}
+
+.send-all-link-btn {
+  display: block;
+  text-align: center;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--color-green-dark);
+  background: linear-gradient(135deg, var(--color-gold), var(--color-gold-light));
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.send-all-link-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+}
+
+.send-all-open-all {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  background: transparent;
+  border: 1px dashed var(--color-green);
+  border-radius: 8px;
+  padding: 0.45rem 0.75rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+.send-all-open-all:hover {
+  border-color: var(--color-gold);
+  color: var(--color-gold-light);
+}
+
 /* Spinner */
 .spinner {
   width: 24px;

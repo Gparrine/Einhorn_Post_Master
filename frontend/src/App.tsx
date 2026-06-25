@@ -5,21 +5,30 @@ import PostInstructions from './components/PostInstructions'
 import RichTextEditor from './components/RichTextEditor'
 import PlatformButton from './components/PlatformButton'
 import ConfirmDialog from './components/ConfirmDialog'
+import SendAllResultsDialog, { type ManualPlatformLink } from './components/SendAllResultsDialog'
 import StatusBar from './components/StatusBar'
 import SharePanel from './components/SharePanel'
 import { postToPlatform, refineWithAI } from './api/client'
-import { copyToClipboard } from './utils/clipboard'
-import { navigateTab, openTabPlaceholder, openUrlInNewTab } from './utils/openTab'
-import type { Platform, PlatformState, PlatformStates } from './types'
+import { copyToClipboard, copyToClipboardSync } from './utils/clipboard'
+import { openUrlInNewTab } from './utils/openTab'
+import type { Platform, PlatformState, PlatformStates, PostResult } from './types'
 
 const PLATFORMS: Platform[] = ['facebook', 'discord', 'meetup', 'gymdesk']
-const MANUAL_PLATFORMS: Platform[] = ['facebook', 'meetup', 'gymdesk']
 
 const INITIAL_STATES: PlatformStates = {
   discord: { status: 'idle' },
   facebook: { status: 'idle' },
   meetup: { status: 'idle' },
   gymdesk: { status: 'idle' },
+}
+
+interface SendAllResults {
+  copied: boolean
+  manualLinks: ManualPlatformLink[]
+}
+
+interface SendOptions {
+  skipManualActions?: boolean
 }
 
 function App() {
@@ -31,6 +40,7 @@ function App() {
   const [isRefining, setIsRefining] = useState(false)
   const [confirmTarget, setConfirmTarget] = useState<Platform | 'all' | null>(null)
   const [isSending, setIsSending] = useState(false)
+  const [sendAllResults, setSendAllResults] = useState<SendAllResults | null>(null)
 
   const updatePlatform = useCallback((platform: Platform, update: Partial<PlatformState>) => {
     setPlatformStates((prev) => ({
@@ -63,11 +73,14 @@ function App() {
     }
   }
 
-  const sendToPlatform = async (platform: Platform, preOpenedTab?: Window | null) => {
+  const sendToPlatform = async (
+    platform: Platform,
+    options: SendOptions = {},
+  ): Promise<PostResult> => {
     if (!plainText.trim()) {
       setStatusType('error')
       setStatusMessage('Please enter post text before sending.')
-      return
+      return { platform, success: false, error: 'Post text is required.' }
     }
 
     updatePlatform(platform, { status: 'loading', error: undefined })
@@ -78,50 +91,51 @@ function App() {
       const result = await postToPlatform(platform, htmlContent, plainText)
 
       if (result.success) {
-        if (result.mode === 'manual' && result.copyText) {
+        if (result.mode === 'manual' && result.copyText && !options.skipManualActions) {
           try {
             await copyToClipboard(result.copyText)
             if (result.postUrl) {
-              const opened = navigateTab(preOpenedTab, result.postUrl)
-              if (!opened) {
-                openUrlInNewTab(result.postUrl)
-              }
+              openUrlInNewTab(result.postUrl)
             }
           } catch {
             updatePlatform(platform, {
               status: 'error',
               error: 'Could not copy text to clipboard. Copy manually from the editor.',
+              postUrl: result.postUrl,
             })
             setStatusType('error')
             setStatusMessage('Could not copy post text to clipboard.')
-            return
+            return result
           }
         }
 
         updatePlatform(platform, { status: 'success', postUrl: result.postUrl })
-        setStatusType('success')
-        setStatusMessage(
-          result.instructions ||
-            (result.mode === 'manual'
-              ? `Copied for ${platformLabel(platform)}. Paste and publish manually.`
-              : `Posted successfully to ${platformLabel(platform)}.`),
-        )
-      } else {
-        if (preOpenedTab && !preOpenedTab.closed) {
-          preOpenedTab.close()
+        if (!options.skipManualActions) {
+          setStatusType('success')
+          setStatusMessage(
+            result.instructions ||
+              (result.mode === 'manual'
+                ? `Copied for ${platformLabel(platform)}. Paste and publish manually.`
+                : `Posted successfully to ${platformLabel(platform)}.`),
+          )
         }
-        updatePlatform(platform, { status: 'error', error: result.error })
+        return result
+      }
+
+      updatePlatform(platform, { status: 'error', error: result.error })
+      if (!options.skipManualActions) {
         setStatusType('error')
         setStatusMessage(result.error || `Failed to post to ${platformLabel(platform)}.`)
       }
+      return result
     } catch (err) {
-      if (preOpenedTab && !preOpenedTab.closed) {
-        preOpenedTab.close()
-      }
       const message = err instanceof Error ? err.message : 'Unknown error'
       updatePlatform(platform, { status: 'error', error: message })
-      setStatusType('error')
-      setStatusMessage(message)
+      if (!options.skipManualActions) {
+        setStatusType('error')
+        setStatusMessage(message)
+      }
+      return { platform, success: false, error: message }
     }
   }
 
@@ -132,32 +146,51 @@ function App() {
     setIsSending(true)
     setConfirmTarget(null)
 
-    const platformsToSend: Platform[] = target === 'all' ? PLATFORMS : [target]
-    const manualTabs: Partial<Record<Platform, Window | null>> = {}
+    if (target === 'all') {
+      const copied = copyToClipboardSync(plainText)
 
-    for (const platform of platformsToSend) {
-      if (MANUAL_PLATFORMS.includes(platform)) {
-        manualTabs[platform] = openTabPlaceholder()
-      }
+      void (async () => {
+        try {
+          setStatusType('info')
+          setStatusMessage('Sending to all platforms…')
+
+          const manualLinks: ManualPlatformLink[] = []
+          let failureCount = 0
+
+          for (const platform of PLATFORMS) {
+            const result = await sendToPlatform(platform, { skipManualActions: true })
+
+            if (!result.success) {
+              failureCount += 1
+            } else if (result.mode === 'manual' && result.postUrl) {
+              manualLinks.push({
+                platform,
+                label: platformLabel(platform),
+                url: result.postUrl,
+              })
+            }
+          }
+
+          setSendAllResults({ copied, manualLinks })
+
+          if (failureCount > 0) {
+            setStatusType('error')
+            setStatusMessage('Some platforms failed. Check the buttons above for details.')
+          } else {
+            setStatusType('success')
+            setStatusMessage('All platforms ready. Use the dialog to open Facebook, Meetup, and Gymdesk.')
+          }
+        } finally {
+          setIsSending(false)
+        }
+      })()
+
+      return
     }
 
     void (async () => {
       try {
-        if (target === 'all') {
-          setStatusType('info')
-          setStatusMessage('Sending to all platforms…')
-
-          for (const platform of PLATFORMS) {
-            await sendToPlatform(platform, manualTabs[platform])
-          }
-
-          setStatusType('success')
-          setStatusMessage(
-            'Sent to all platforms. Paste on Facebook, Meetup, and Gymdesk in the tabs that opened.',
-          )
-        } else {
-          await sendToPlatform(target, manualTabs[target])
-        }
+        await sendToPlatform(target)
       } finally {
         setIsSending(false)
       }
@@ -230,6 +263,14 @@ function App() {
           target={confirmTarget}
           onConfirm={handleConfirmSend}
           onCancel={() => setConfirmTarget(null)}
+        />
+      )}
+
+      {sendAllResults && (
+        <SendAllResultsDialog
+          copied={sendAllResults.copied}
+          manualLinks={sendAllResults.manualLinks}
+          onClose={() => setSendAllResults(null)}
         />
       )}
     </div>
