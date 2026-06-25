@@ -1,6 +1,7 @@
 import './App.css'
 import { useCallback, useState } from 'react'
 import Header from './components/Header'
+import PostInstructions from './components/PostInstructions'
 import RichTextEditor from './components/RichTextEditor'
 import PlatformButton from './components/PlatformButton'
 import ConfirmDialog from './components/ConfirmDialog'
@@ -152,6 +153,8 @@ function App() {
         <Header />
 
         <main className="main-content">
+          <PostInstructions />
+
           <RichTextEditor
             content={htmlContent}
             onChange={(html, text) => {

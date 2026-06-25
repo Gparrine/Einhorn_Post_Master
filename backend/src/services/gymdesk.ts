@@ -16,7 +16,7 @@ export async function postToGymdesk(content: string, plainText: string): Promise
 
   if (!classDate) {
     throw new Error(
-      'No class date found in your post. Include a date (e.g. "June 28, 2026" or "6/28/2026") so Gymdesk knows which session to update.',
+      'No class date found in your post. Include a month and day (e.g. "June 28" or "6/28") — the current year is assumed.',
     )
   }
 

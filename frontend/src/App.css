@@ -103,6 +103,24 @@ body {
   margin-top: 0.5rem;
 }
 
+/* Post instructions */
+.post-instructions {
+  background: rgba(53, 94, 59, 0.25);
+  border: 1px solid var(--color-green);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--color-text);
+  line-height: 1.5;
+}
+
+.post-instructions-hint {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+}
+
 /* Editor */
 .main-content {
   display: flex;

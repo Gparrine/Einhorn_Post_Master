@@ -13,11 +13,15 @@ The green checkmark means copy + open succeeded — not that Gymdesk saved the d
 
 ## Step 1 — Include a date in every post
 
-Gymdesk matching relies on a date in your post text, for example:
+Gymdesk matching relies on a **month and day** in your post text. The **current year is assumed**.
 
-- `June 28, 2026`
-- `6/28/2026`
-- `2026-06-28`
+Examples:
+
+- `June 28`
+- `6/28`
+- `Jun 28`
+
+Full-year dates still work (`June 28, 2026`, `2026-06-28`).
 
 The app uses that date to suggest which Einhorn session to edit (Wednesday / Sunday / first or third Monday).
 
