@@ -48,7 +48,7 @@ If something goes wrong, a **red X** appears with a short error message at the b
 
 - **Include the date in the post** so Meetup and Gymdesk can match the right class.
 - **Refine with AI** works best when you’ve already noted the date and main activities — it fills in the rest.
-- **Send to All** is handy when you want every channel updated. It opens three tabs at once (Facebook, Meetup, Gymdesk) — allow pop-ups if they don’t appear.
+- **Send to All** posts to Discord automatically, copies your text once, then shows **Open Facebook**, **Open Meetup**, and **Open Gymdesk** buttons — click each link, paste, and save.
 
 ---
 
@@ -57,7 +57,7 @@ If something goes wrong, a **red X** appears with a short error message at the b
 1. Write: `June 28 — longsword fundamentals, partner drills, open sparring`
 2. Click **Refine with AI** and review
 3. Click **Send to All**
-4. Confirm each send; paste on Facebook, Meetup, and Gymdesk when those tabs open
+4. Confirm the send; use the dialog links to open Facebook, Meetup, and Gymdesk and paste on each
 5. Discord goes live on its own
 
 That’s it — one draft, four channels.
