@@ -22,7 +22,7 @@
 |---|---|---|
 | **Infrastructure** | ✅ Complete | Repo public, Pages deployed, Render API live |
 | **Discord** | ✅ Complete | Posts to `#meetings-plans` verified working |
-| **Gemini (Refine with AI)** | ⏳ Not configured | Needs `GEMINI_API_KEY` + Gem instructions in `GEMINI_SYSTEM_PROMPT` |
+| **Gemini (Refine with AI)** | ⏳ Ready to configure | See [`GEMINI.md`](GEMINI.md) — set `GEMINI_API_KEY` on Render |
 | **Facebook** | ⏳ Not started | Groups API deprecated — plan uses manual-assist or automation |
 | **Gymdesk** | ⏳ Not started | No public write API — plan uses manual-assist or automation |
 | **Meetup** | ⏳ Not started | Needs Meetup Pro OAuth; code must update event description (not comments) |
@@ -70,11 +70,11 @@ Configured on **einhorn-postmaster-api**:
 
 ### Phase 2: Gemini Gem (AI Refine)
 
-1. [Google AI Studio](https://aistudio.google.com/apikey) → create API key
-2. Copy your **Gem instructions** from Gemini Gem manager → paste into Render `GEMINI_SYSTEM_PROMPT`
-3. Set `GEMINI_API_KEY` on Render
-4. Test **Refine with AI** on live app  
-   *Note: Gems are not callable by ID via API — instructions must be replicated in `GEMINI_SYSTEM_PROMPT`*
+See **[docs/GEMINI.md](GEMINI.md)** for full setup.
+
+1. [Google AI Studio](https://aistudio.google.com/apikey) → create API key → Render `GEMINI_API_KEY`
+2. Paste Gem instructions into [`backend/prompts/einhorn-gem.prompt.md`](../backend/prompts/einhorn-gem.prompt.md) (or Render `GEMINI_SYSTEM_PROMPT`)
+3. Test **Refine with AI** on live app
 
 ### Phase 3: Facebook
 

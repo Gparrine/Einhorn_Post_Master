@@ -11,27 +11,58 @@ export async function refineText(htmlContent: string, plainText: string): Promis
   const model = genAI.getGenerativeModel({
     model: config.gemini.model,
     systemInstruction: config.gemini.systemPrompt,
+    generationConfig: {
+      temperature: config.gemini.temperature,
+      maxOutputTokens: 8192,
+    },
   })
 
-  const result = await model.generateContent(
-    `Please refine this martial arts club announcement:\n\n${plainText}\n\nOriginal HTML (for reference):\n${htmlContent}`,
-  )
-
+  const result = await model.generateContent(buildUserPrompt(plainText, htmlContent))
   const text = result.response.text()
 
-  if (text.includes('<')) {
-    return text.replace(/^```html?\n?|\n?```$/g, '').trim()
+  if (!text?.trim()) {
+    throw new Error('Gemini returned an empty response. Try again or shorten your draft.')
   }
 
-  return text
-    .split('\n\n')
+  return normalizeHtmlOutput(text)
+}
+
+function buildUserPrompt(plainText: string, htmlContent: string): string {
+  return `Refine this Einhorn martial arts club announcement.
+
+Draft (plain text):
+${plainText.trim()}
+
+${htmlContent.trim() && htmlContent !== plainText ? `Original formatting (HTML reference):\n${htmlContent.trim()}` : ''}`
+}
+
+function normalizeHtmlOutput(text: string): string {
+  let output = text.trim()
+
+  // Strip markdown code fences if the model ignores instructions
+  output = output.replace(/^```(?:html)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim()
+
+  // Strip accidental preamble lines some models add
+  if (!output.startsWith('<')) {
+    const htmlStart = output.indexOf('<p>')
+    if (htmlStart > 0) {
+      output = output.slice(htmlStart)
+    }
+  }
+
+  if (output.includes('<')) {
+    return output
+  }
+
+  return output
+    .split(/\n\n+/)
     .filter(Boolean)
-    .map((p) => `<p>${p.trim()}</p>`)
+    .map((p) => `<p>${p.trim().replace(/\n/g, '<br>')}</p>`)
     .join('')
 }
 
 function demoRefine(_html: string, plainText: string): string {
-  return `<p><strong>✨ Refined by AI (demo mode):</strong></p>${plainText
+  return `<p><strong>Refined by AI (demo mode):</strong></p>${plainText
     .split('\n')
     .filter(Boolean)
     .map((line) => `<p>${line.trim()}</p>`)

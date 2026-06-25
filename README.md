@@ -19,6 +19,8 @@ A mini-app for the **Einhorn** martial arts club that lets you compose a post on
 
 Session status and resume guide: **[docs/EPM.md](docs/EPM.md)**
 
+Gemini setup: **[docs/GEMINI.md](docs/GEMINI.md)**
+
 ## Live App
 
 Once deployed, the app is available at:

@@ -3,6 +3,7 @@ import express from 'express'
 import cors from 'cors'
 import refineRouter from './routes/refine.js'
 import postRouter from './routes/post.js'
+import { config, hasCredentials } from './config.js'
 
 const app = express()
 const PORT = process.env.PORT || 3001
@@ -19,7 +20,13 @@ app.get('/', (_req, res) => {
 })
 
 app.get('/api/health', (_req, res) => {
-  res.json({ status: 'ok', service: 'einhorn-postmaster' })
+  res.json({
+    status: 'ok',
+    service: 'einhorn-postmaster',
+    gemini: hasCredentials('gemini'),
+    discord: hasCredentials('discord'),
+    demoMode: config.demoMode,
+  })
 })
 
 app.use('/api/refine', refineRouter)
