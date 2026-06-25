@@ -101,6 +101,7 @@ Expected: JSON with `"content": "<p>...</p>..."` refined HTML.
 |---|---|
 | Gem instructions | `backend/prompts/einhorn-gem.prompt.md` or `GEMINI_SYSTEM_PROMPT` |
 | Gem model choice | `GEMINI_MODEL` (default `gemini-2.0-flash`) |
-| Uploaded knowledge files | Not yet supported — add key facts to prompt file for now |
+| Gem web search | Enabled via Google Search grounding on every refine |
+| Uploaded knowledge files | Not yet supported — key facts are in the prompt file |
 
-To add reference documents later, we can use the Gemini Files API in a follow-up.
+Each refine runs **two mandatory web searches** (hydration history + idiom/quote) before writing the post. Examples in the prompt are forbidden outputs.

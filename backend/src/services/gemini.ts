@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from '@google/generative-ai'
+import { GoogleGenAI } from '@google/genai'
 import { config, hasCredentials } from '../config.js'
 
 export async function refineText(htmlContent: string, plainText: string): Promise<string> {
@@ -7,18 +7,20 @@ export async function refineText(htmlContent: string, plainText: string): Promis
     return demoRefine(htmlContent, plainText)
   }
 
-  const genAI = new GoogleGenerativeAI(config.gemini.apiKey)
-  const model = genAI.getGenerativeModel({
+  const ai = new GoogleGenAI({ apiKey: config.gemini.apiKey })
+
+  const response = await ai.models.generateContent({
     model: config.gemini.model,
-    systemInstruction: config.gemini.systemPrompt,
-    generationConfig: {
+    contents: buildUserPrompt(plainText, htmlContent),
+    config: {
+      systemInstruction: config.gemini.systemPrompt,
+      tools: [{ googleSearch: {} }],
       temperature: config.gemini.temperature,
       maxOutputTokens: 8192,
     },
   })
 
-  const result = await model.generateContent(buildUserPrompt(plainText, htmlContent))
-  const text = result.response.text()
+  const text = response.text
 
   if (!text?.trim()) {
     throw new Error('Gemini returned an empty response. Try again or shorten your draft.')
@@ -30,6 +32,12 @@ export async function refineText(htmlContent: string, plainText: string): Promis
 function buildUserPrompt(plainText: string, htmlContent: string): string {
   return `Refine this Einhorn martial arts club announcement.
 
+Before writing the final post, you MUST use Google Search twice:
+1. Search for a real historical fact about hydration, water, moats, sieges, ancient beverages, or warriors on campaign — then adapt it into a fresh hydration reminder. Do NOT reuse any example from the system instructions.
+2. Search for a real proverb, idiom, or quote — then adapt it into a fresh closing quip addressed to "Seeker" with sword/HEMA flavor. Do NOT reuse any example from the system instructions.
+
+Each refinement must use newly searched material. Never copy the Cornwall siege, Posca, "swinging sword gathers no rust," or any other example verbatim or paraphrased.
+
 Draft (plain text):
 ${plainText.trim()}
 
@@ -39,10 +47,8 @@ ${htmlContent.trim() && htmlContent !== plainText ? `Original formatting (HTML r
 function normalizeHtmlOutput(text: string): string {
   let output = text.trim()
 
-  // Strip markdown code fences if the model ignores instructions
   output = output.replace(/^```(?:html)?\s*\n?/i, '').replace(/\n?```\s*$/i, '').trim()
 
-  // Strip accidental preamble lines some models add
   if (!output.startsWith('<')) {
     const htmlStart = output.indexOf('<p>')
     if (htmlStart > 0) {
@@ -62,7 +68,7 @@ function normalizeHtmlOutput(text: string): string {
 }
 
 function demoRefine(_html: string, plainText: string): string {
-  return `<p><strong>Refined by AI (demo mode):</strong></p>${plainText
+  return `<p><strong>Refined by AI (demo mode — web search disabled):</strong></p>${plainText
     .split('\n')
     .filter(Boolean)
     .map((line) => `<p>${line.trim()}</p>`)
