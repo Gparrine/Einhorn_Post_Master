@@ -25,7 +25,7 @@
 | **Gemini (Refine with AI)** | ⏳ Ready to configure | See [`GEMINI.md`](GEMINI.md) — set `GEMINI_API_KEY` on Render |
 | **Facebook** | ⏳ Ready to configure | Manual-assist — see [`FACEBOOK.md`](FACEBOOK.md), set `FACEBOOK_GROUP_URL` on Render |
 | **Gymdesk** | ⏳ Ready to configure | Manual-assist — see [`GYMDESK.md`](GYMDESK.md), optional `GYMDESK_OPEN_URL` on Render |
-| **Meetup** | ⏳ Not started | Needs Meetup Pro OAuth; code must update event description (not comments) |
+| **Meetup** | ✅ Ready to configure | Manual-assist by default — see [`MEETUP.md`](MEETUP.md); optional `MEETUP_API_KEY` for GraphQL auto-update |
 
 ---
 
@@ -41,7 +41,7 @@ Configured on **einhorn-postmaster-api**:
 | `ALLOWED_ORIGINS` | Should include `https://gparrine.github.io` |
 | `GEMINI_API_KEY` | ❌ Set on Render to enable Refine with AI |
 | `GEMINI_SYSTEM_PROMPT` | Optional override — default uses [`backend/prompts/einhorn-gem.prompt.md`](../backend/prompts/einhorn-gem.prompt.md) |
-| Facebook / Meetup / Gymdesk vars | ❌ Not set |
+| Facebook / Meetup / Gymdesk vars | ❌ Not set — see [`FACEBOOK.md`](FACEBOOK.md), [`MEETUP.md`](MEETUP.md), [`GYMDESK.md`](GYMDESK.md) |
 
 **Local dev:** copy [`backend/.env.example`](../backend/.env.example) → `backend/.env` (gitignored).
 
@@ -87,10 +87,11 @@ See **[docs/GEMINI.md](GEMINI.md)** for full setup.
 - Update scheduled class **Description** tab for date-matched session
 - Likely manual-assist or Playwright automation — no documented public write API
 
-### Phase 5: Meetup
+### Phase 5: Meetup ✅
 
-- Requires **Meetup Pro** + OAuth token
-- Rewrite service to `POST /2/event/{id}` with `description` (not event comments)
+- Manual-assist with `MEETUP_GROUP_URLNAME` (copy + open events page)
+- Optional API with `MEETUP_API_KEY` (Meetup Pro OAuth) — GraphQL `editEvent` updates description
+- See [`MEETUP.md`](MEETUP.md)
 
 ---
 
@@ -123,7 +124,7 @@ npm run dev           # frontend :5173 + backend :3001
 
 1. **Facebook:** manual-assist vs browser automation vs skip
 2. **Gymdesk:** manual-assist vs browser automation
-3. **Meetup:** confirm Meetup Pro subscription for API access
+3. **Meetup:** set `MEETUP_GROUP_URLNAME`; add `MEETUP_API_KEY` when OAuth is ready
 
 ---
 

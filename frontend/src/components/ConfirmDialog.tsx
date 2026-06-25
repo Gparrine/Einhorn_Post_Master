@@ -29,6 +29,11 @@ export default function ConfirmDialog({ target, onConfirm, onCancel }: ConfirmDi
       ? ' Gymdesk copies the description and opens your schedule — find the session for the date in your post, Edit Session → Description tab, paste and save.'
       : ''
 
+  const meetupNote =
+    target === 'meetup' || target === 'all'
+      ? ' Meetup copies the description and opens your group events page — find the event for the date in your post, Edit, and paste into the Description field.'
+      : ''
+
   return (
     <div className="dialog-backdrop" onClick={onCancel}>
       <div className="dialog" onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true">
@@ -38,6 +43,7 @@ export default function ConfirmDialog({ target, onConfirm, onCancel }: ConfirmDi
           <strong>{destination}</strong>?
           {facebookNote}
           {gymdeskNote}
+          {meetupNote}
         </p>
         <div className="dialog-actions">
           <button type="button" className="dialog-btn cancel" onClick={onCancel}>
