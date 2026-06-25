@@ -111,19 +111,17 @@ Copy `backend/.env.example` to `backend/.env` and fill in your credentials:
 | `GEMINI_SYSTEM_PROMPT` | Optional custom prompt matching your Gemini gem |
 | `DISCORD_BOT_TOKEN` | Discord bot token with message permissions |
 | `DISCORD_CHANNEL_ID` | Target channel ID |
-| `FACEBOOK_ACCESS_TOKEN` | Page/group access token with `publish_to_groups` |
-| `FACEBOOK_GROUP_ID` | Facebook group ID |
-| `MEETUP_API_KEY` | Meetup OAuth bearer token |
-| `MEETUP_GROUP_URLNAME` | Meetup group URL slug |
-| `GYMDESK_API_KEY` | Gymdesk API key |
-| `GYMDESK_LOCATION_ID` | Gymdesk location ID |
+| `FACEBOOK_GROUP_URL` | Einhorn Facebook group URL (manual-assist) |
+| `MEETUP_GROUP_URLNAME` | Meetup group URL slug (required for Meetup) |
+| `MEETUP_API_KEY` | Meetup OAuth bearer token (optional — enables automatic event description updates) |
+| `GYMDESK_OPEN_URL` | Gymdesk URL to open after copy (manual-assist) |
 | `DEMO_MODE` | Set `false` when real credentials are configured |
 
 Set `DEMO_MODE=false` once your API keys are in place.
 
 ### Meetup date matching
 
-When posting to Meetup, the app looks for a date in your post text and matches it to an upcoming group event. Include a clear date such as **June 24, 2026** or **6/24/2026**.
+When posting to Meetup, the app looks for a date in your post text and matches it to an upcoming group event. Include a month and day such as **June 28** or **6/28** (current year assumed). See **[docs/MEETUP.md](docs/MEETUP.md)** for setup.
 
 ## Deployment
 

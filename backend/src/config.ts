@@ -68,7 +68,7 @@ export function hasCredentials(service: 'discord' | 'facebook' | 'meetup' | 'gym
     case 'facebook':
       return !!config.facebook.groupUrl
     case 'meetup':
-      return !!config.meetup.apiKey && !!config.meetup.groupUrlname
+      return !!config.meetup.groupUrlname
     case 'gymdesk':
       return !!config.gymdesk.openUrl
     default:
@@ -78,4 +78,8 @@ export function hasCredentials(service: 'discord' | 'facebook' | 'meetup' | 'gym
 
 export function canUseService(service: 'discord' | 'facebook' | 'meetup' | 'gymdesk' | 'gemini'): boolean {
   return hasCredentials(service) || config.demoMode
+}
+
+export function hasMeetupApiAccess(): boolean {
+  return !!config.meetup.apiKey && !!config.meetup.groupUrlname
 }
