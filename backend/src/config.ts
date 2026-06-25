@@ -53,9 +53,8 @@ export const config = {
     groupUrlname: process.env.MEETUP_GROUP_URLNAME || '',
   },
   gymdesk: {
-    apiKey: process.env.GYMDESK_API_KEY || '',
-    apiUrl: process.env.GYMDESK_API_URL || 'https://api.gymdesk.com',
-    locationId: process.env.GYMDESK_LOCATION_ID || '',
+    openUrl: process.env.GYMDESK_OPEN_URL || 'https://app.gymdesk.com/login',
+    memberSignupUrl: process.env.GYMDESK_MEMBER_SIGNUP_URL || 'https://einhornla.gymdesk.com/signup',
   },
   demoMode: process.env.DEMO_MODE === 'true',
 }
@@ -71,7 +70,7 @@ export function hasCredentials(service: 'discord' | 'facebook' | 'meetup' | 'gym
     case 'meetup':
       return !!config.meetup.apiKey && !!config.meetup.groupUrlname
     case 'gymdesk':
-      return !!config.gymdesk.apiKey && !!config.gymdesk.locationId
+      return !!config.gymdesk.openUrl
     default:
       return false
   }

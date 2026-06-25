@@ -26,6 +26,7 @@ app.get('/api/health', (_req, res) => {
     gemini: hasCredentials('gemini'),
     discord: hasCredentials('discord'),
     facebook: hasCredentials('facebook'),
+    gymdesk: hasCredentials('gymdesk'),
     demoMode: config.demoMode,
   })
 })

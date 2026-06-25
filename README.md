@@ -23,6 +23,8 @@ Gemini setup: **[docs/GEMINI.md](docs/GEMINI.md)**
 
 Facebook setup: **[docs/FACEBOOK.md](docs/FACEBOOK.md)**
 
+Gymdesk setup: **[docs/GYMDESK.md](docs/GYMDESK.md)**
+
 ## Live App
 
 Once deployed, the app is available at:

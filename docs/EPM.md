@@ -24,7 +24,7 @@
 | **Discord** | ✅ Complete | Posts to `#meetings-plans` verified working |
 | **Gemini (Refine with AI)** | ⏳ Ready to configure | See [`GEMINI.md`](GEMINI.md) — set `GEMINI_API_KEY` on Render |
 | **Facebook** | ⏳ Ready to configure | Manual-assist — see [`FACEBOOK.md`](FACEBOOK.md), set `FACEBOOK_GROUP_URL` on Render |
-| **Gymdesk** | ⏳ Not started | No public write API — plan uses manual-assist or automation |
+| **Gymdesk** | ⏳ Ready to configure | Manual-assist — see [`GYMDESK.md`](GYMDESK.md), optional `GYMDESK_OPEN_URL` on Render |
 | **Meetup** | ⏳ Not started | Needs Meetup Pro OAuth; code must update event description (not comments) |
 
 ---

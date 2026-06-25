@@ -13,6 +13,8 @@ interface PostHandlerResult {
   mode?: 'manual'
   copyText?: string
   instructions?: string
+  matchedDate?: string
+  sessionHint?: string
 }
 
 const router = Router()
@@ -86,6 +88,8 @@ router.post('/:platform', async (req, res, next) => {
       payload.mode = result.mode
       payload.copyText = result.copyText
       payload.instructions = result.instructions
+      if (result.matchedDate) payload.matchedDate = result.matchedDate
+      if (result.sessionHint) payload.sessionHint = result.sessionHint
     }
 
     res.json(payload)
