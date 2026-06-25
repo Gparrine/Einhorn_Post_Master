@@ -9,7 +9,7 @@ This guide walks through deploying the backend API and connecting the GitHub Pag
 | Frontend | GitHub Pages | `https://gparrine.github.io/einhorn_post_master/` |
 | Backend API | Render (free tier) | `https://einhorn-postmaster-api.onrender.com` (after you create it) |
 
-The frontend calls the backend over HTTPS. API keys live **only** on Render — never in the browser or GitHub Pages build.
+The frontend calls the backend over HTTPS. Platform secrets (Discord, Gemini, etc.) live **only** on Render. An optional shared **API access key** is also sent from the browser — it blocks casual abuse but is visible in the published app (see Part A step 3).
 
 ---
 
@@ -62,6 +62,7 @@ In Render → **einhorn-postmaster-api** → **Environment**:
 |---|---|---|
 | `DEMO_MODE` | `true` | Keep `true` until you add real API keys in later steps |
 | `ALLOWED_ORIGINS` | `http://localhost:5173,https://gparrine.github.io` | Add other origins comma-separated if needed |
+| `API_ACCESS_KEY` | long random string | **Recommended.** Same value as GitHub `VITE_API_ACCESS_KEY` — blocks anonymous API abuse |
 | `NODE_ENV` | `production` | Usually set by blueprint |
 
 Add platform credentials later (Discord, Gemini, etc.) as you complete each integration phase. Click **Save Changes** after edits — Render redeploys automatically.
@@ -79,11 +80,14 @@ If Render assigns a different name, use **your** URL everywhere below instead of
 ### 1. Set repository variable
 
 1. GitHub repo → **Settings → Secrets and variables → Actions → Variables**.
-2. Click **New repository variable**.
-3. Name: `VITE_API_URL`
-4. Value: your Render URL with **no trailing slash**  
-   Example: `https://einhorn-postmaster-api.onrender.com`
-5. Save.
+2. Add or update:
+
+| Name | Value |
+|---|---|
+| `VITE_API_URL` | Render URL with **no trailing slash** (e.g. `https://einhorn-postmaster-api.onrender.com`) |
+| `VITE_API_ACCESS_KEY` | Same random string as Render `API_ACCESS_KEY` |
+
+3. Save each variable.
 
 ### 2. Enable GitHub Pages
 
@@ -133,6 +137,7 @@ VITE_API_URL=https://einhorn-postmaster-api.onrender.com npm run dev
 | Health page spins / never loads | Check Render **Logs** for startup errors. Build Command should be `npm ci`, Start Command `npm start`. Redeploy with **Clear build cache** |
 | Build failed with exit status 2 | Set Build Command to `npm ci` only (not `npm run build`). The app runs TypeScript via `tsx` at start time |
 | Pages site loads but API calls fail | Set `VITE_API_URL` repo variable; redeploy Pages workflow |
+| `Unauthorized` on post/refine | Set matching `API_ACCESS_KEY` on Render and `VITE_API_ACCESS_KEY` on GitHub; redeploy both |
 | CORS error in browser console | Add your origin to `ALLOWED_ORIGINS` on Render |
 | API health URL times out | Wake Render service (first request after sleep is slow) |
 | 503 “not configured” on post/refine | Expected until you add credentials; ensure `DEMO_MODE=true` for simulated responses |

@@ -39,6 +39,7 @@ Configured on **einhorn-postmaster-api**:
 | `DISCORD_CHANNEL_ID` | ✅ Set on Render (`#meetings-plans`) |
 | `DEMO_MODE` | ✅ `false` (real Discord posts; other platforms need credentials or will error) |
 | `ALLOWED_ORIGINS` | Should include `https://gparrine.github.io` |
+| `API_ACCESS_KEY` | Recommended — same value as GitHub `VITE_API_ACCESS_KEY` |
 | `GEMINI_API_KEY` | ❌ Set on Render to enable Refine with AI |
 | `GEMINI_SYSTEM_PROMPT` | Optional override — default uses [`backend/prompts/einhorn-gem.prompt.md`](../backend/prompts/einhorn-gem.prompt.md) |
 | Facebook / Meetup / Gymdesk vars | ❌ Not set — see [`FACEBOOK.md`](FACEBOOK.md), [`MEETUP.md`](MEETUP.md), [`GYMDESK.md`](GYMDESK.md) |
@@ -63,7 +64,7 @@ Configured on **einhorn-postmaster-api**:
 
 - Rotate Discord bot tokens and API keys if they are ever exposed outside Render.
 - Never commit `.env`, tokens, or API keys to GitHub.
-- Keep channel IDs and group URLs in Render or private notes — avoid putting them in public docs when possible.
+- `API_ACCESS_KEY` / `VITE_API_ACCESS_KEY` reduce casual abuse but are visible in the published frontend — not a substitute for full login auth.
 
 ---
 
