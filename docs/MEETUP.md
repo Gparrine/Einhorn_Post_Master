@@ -44,10 +44,16 @@ Open your Einhorn group on Meetup. The slug is the path segment after `/`:
 
 - `https://www.meetup.com/einhorn-la/` → `einhorn-la`
 
-Set:
+Set either the slug alone or a full group URL — both work:
 
 ```
-MEETUP_GROUP_URLNAME=einhorn-la
+MEETUP_GROUP_URLNAME=einhorn-la-medieval-martial-arts
+```
+
+or
+
+```
+MEETUP_GROUP_URLNAME=https://www.meetup.com/einhorn-la-medieval-martial-arts/
 ```
 
 Save changes. Render redeploys automatically.

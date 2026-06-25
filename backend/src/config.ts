@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { normalizeMeetupGroupUrlname } from './utils/meetupUrl.js'
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url))
 const backendRoot = path.join(moduleDir, '..')
@@ -50,7 +51,7 @@ export const config = {
   },
   meetup: {
     apiKey: process.env.MEETUP_API_KEY || '',
-    groupUrlname: process.env.MEETUP_GROUP_URLNAME || '',
+    groupUrlname: normalizeMeetupGroupUrlname(process.env.MEETUP_GROUP_URLNAME || ''),
   },
   gymdesk: {
     openUrl: process.env.GYMDESK_OPEN_URL || 'https://app.gymdesk.com/login',

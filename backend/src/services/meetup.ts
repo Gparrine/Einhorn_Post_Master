@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
 import { config, hasCredentials, hasMeetupApiAccess } from '../config.js'
 import { extractDates, formatDateLong, stripHtml } from '../utils/dates.js'
+import { meetupEventUrl, meetupGroupEventsUrl } from '../utils/meetupUrl.js'
 
 const MEETUP_GQL_URL = 'https://api.meetup.com/gql-ext'
 const UPCOMING_EVENTS_LIMIT = 50
@@ -45,7 +46,7 @@ export async function postToMeetup(content: string, plainText: string): Promise<
     await delay(900)
     return {
       postId: `demo-meetup-${Date.now()}`,
-      postUrl: `https://www.meetup.com/${groupUrlname}/events/`,
+      postUrl: meetupGroupEventsUrl(groupUrlname),
       mode: 'manual',
       copyText,
       instructions: `Demo mode: copy the post and paste it into the Meetup event description for ${dateLabel}.`,
@@ -59,7 +60,7 @@ export async function postToMeetup(content: string, plainText: string): Promise<
 
   return {
     postId: `manual-meetup-${Date.now()}`,
-    postUrl: `https://www.meetup.com/${groupUrlname}/events/`,
+    postUrl: meetupGroupEventsUrl(groupUrlname),
     mode: 'manual',
     copyText,
     instructions:
@@ -111,7 +112,7 @@ async function postToMeetupViaApi(
 
   return {
     postId: `api-meetup-${match.id}`,
-    postUrl: match.eventUrl || `https://www.meetup.com/${groupUrlname}/events/${match.id}/`,
+    postUrl: match.eventUrl || meetupEventUrl(groupUrlname, match.id),
     matchedDate: dateLabel,
     eventTitle: match.title,
   }
