@@ -5,6 +5,7 @@ import Link from '@tiptap/extension-link'
 import TextAlign from '@tiptap/extension-text-align'
 import Placeholder from '@tiptap/extension-placeholder'
 import { useEffect } from 'react'
+import EmojiPicker from './EmojiPicker'
 
 interface RichTextEditorProps {
   content: string
@@ -98,6 +99,8 @@ export default function RichTextEditor({ content, onChange, onRefine, isRefining
           >
             ≡
           </button>
+          <span className="toolbar-sep" />
+          <EmojiPicker editor={editor} />
         </div>
 
         <button
