@@ -44,6 +44,16 @@ If something goes wrong, a **red X** appears with a short error message at the b
 
 ---
 
+## Why Discord is automatic (and the others open in your browser)
+
+**Discord** is the only platform here that offers a **public backend API** Einhorn Postmaster can call directly. When you send to Discord, the app posts for you — no extra steps.
+
+**Facebook**, **Meetup**, and **Gymdesk** do not allow the same kind of automated posting (or don’t expose a reliable public API for updating class/event descriptions). Because of that, Postmaster uses a **workaround**: it copies your text and opens the right page in your browser so you can paste and save there yourself. That’s why **Send to All** shows **Open Facebook**, **Open Meetup**, and **Open Gymdesk** links after Discord is posted — it’s a necessary step, not a bug.
+
+**Tip:** If your computer or device is **already signed in** to Facebook, Meetup, and Gymdesk in your browser, the process goes much more smoothly — the links open ready to paste, without extra logins.
+
+---
+
 ## Tips
 
 - **Include the date in the post** so Meetup and Gymdesk can match the right class.
