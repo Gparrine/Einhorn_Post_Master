@@ -21,7 +21,14 @@ app.use(
     crossOriginEmbedderPolicy: false,
   }),
 )
-app.use(cors({ origin: allowedOrigins, credentials: false, allowedHeaders: ['Content-Type', 'X-API-Key'] }))
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: false,
+    methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'X-API-Key'],
+  }),
+)
 app.use(express.json({ limit: '1mb' }))
 
 app.get('/', (_req, res) => {
