@@ -137,7 +137,7 @@ VITE_API_URL=https://einhorn-postmaster-api.onrender.com npm run dev
 | Health page spins / never loads | Check Render **Logs** for startup errors. Build Command should be `npm ci`, Start Command `npm start`. Redeploy with **Clear build cache** |
 | Build failed with exit status 2 | Set Build Command to `npm ci` only (not `npm run build`). The app runs TypeScript via `tsx` at start time |
 | Pages site loads but API calls fail | Set `VITE_API_URL` repo variable; redeploy Pages workflow |
-| `Unauthorized` on post/refine | Set matching `API_ACCESS_KEY` on Render and `VITE_API_ACCESS_KEY` on GitHub; redeploy both |
+| `Unauthorized` on post/refine | Set **matching** values: Render `API_ACCESS_KEY` and GitHub variable `VITE_API_ACCESS_KEY`, then **re-run Deploy to GitHub Pages** (the key is baked in at build time) |
 | CORS error in browser console | Add your origin to `ALLOWED_ORIGINS` on Render |
 | API health URL times out | Wake Render service (first request after sleep is slow) |
 | 503 “not configured” on post/refine | Expected until you add credentials; ensure `DEMO_MODE=true` for simulated responses |

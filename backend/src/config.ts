@@ -58,7 +58,7 @@ export const config = {
     memberSignupUrl: process.env.GYMDESK_MEMBER_SIGNUP_URL || 'https://einhornla.gymdesk.com/signup',
   },
   demoMode: process.env.DEMO_MODE === 'true',
-  apiAccessKey: process.env.API_ACCESS_KEY || '',
+  apiAccessKey: (process.env.API_ACCESS_KEY || '').trim(),
 }
 
 export function hasCredentials(service: 'discord' | 'facebook' | 'meetup' | 'gymdesk' | 'gemini'): boolean {
