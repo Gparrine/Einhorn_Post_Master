@@ -1,6 +1,6 @@
 # Einhorn Postmaster — Project Record (EPM)
 
-**Last updated:** 2026-06-24  
+**Last updated:** 2026-06-26  
 **Purpose:** Foolproof session record — resume here next time.
 
 ---
@@ -21,11 +21,15 @@
 | Platform | Status | Notes |
 |---|---|---|
 | **Infrastructure** | ✅ Complete | Repo public, Pages deployed, Render API live |
-| **Discord** | ✅ Complete | Posts to `#meetings-plans` verified working |
-| **Gemini (Refine with AI)** | ⏳ Ready to configure | See [`GEMINI.md`](GEMINI.md) — set `GEMINI_API_KEY` on Render |
-| **Facebook** | ⏳ Ready to configure | Manual-assist — see [`FACEBOOK.md`](FACEBOOK.md), set `FACEBOOK_GROUP_URL` on Render |
-| **Gymdesk** | ⏳ Ready to configure | Manual-assist — see [`GYMDESK.md`](GYMDESK.md), optional `GYMDESK_OPEN_URL` on Render |
-| **Meetup** | ✅ Ready to configure | Manual-assist by default — see [`MEETUP.md`](MEETUP.md); optional `MEETUP_API_KEY` for GraphQL auto-update |
+| **Discord** | ✅ Working | Auto-posts to `#meetings-plans` |
+| **Gemini (Refine with AI)** | ✅ Working | `GEMINI_API_KEY` on Render |
+| **Facebook** | ✅ Working | Manual-assist — copy + open group |
+| **Meetup** | ✅ Working | Manual-assist — `MEETUP_GROUP_URLNAME` set; accepts slug or full URL |
+| **Gymdesk** | ✅ Working | Manual-assist — copy + open schedule |
+| **Send to All** | ✅ Working | Discord auto; dialog with Open Facebook / Meetup / Gymdesk links |
+| **API access key** | ✅ Configured | Render `API_ACCESS_KEY` + GitHub `VITE_API_ACCESS_KEY` (must match; redeploy Pages after changes) |
+
+**Instructor handoff:** [`INSTRUCTOR_GUIDE.md`](INSTRUCTOR_GUIDE.md)
 
 ---
 
@@ -35,28 +39,39 @@ Configured on **einhorn-postmaster-api**:
 
 | Variable | Status |
 |---|---|
-| `DISCORD_BOT_TOKEN` | ✅ Set on Render (rotate if ever exposed) |
-| `DISCORD_CHANNEL_ID` | ✅ Set on Render (`#meetings-plans`) |
-| `DEMO_MODE` | ✅ `false` (real Discord posts; other platforms need credentials or will error) |
-| `ALLOWED_ORIGINS` | Should include `https://gparrine.github.io` |
-| `API_ACCESS_KEY` | Recommended — same value as GitHub `VITE_API_ACCESS_KEY` |
-| `GEMINI_API_KEY` | ❌ Set on Render to enable Refine with AI |
-| `GEMINI_SYSTEM_PROMPT` | Optional override — default uses [`backend/prompts/einhorn-gem.prompt.md`](../backend/prompts/einhorn-gem.prompt.md) |
-| Facebook / Meetup / Gymdesk vars | ❌ Not set — see [`FACEBOOK.md`](FACEBOOK.md), [`MEETUP.md`](MEETUP.md), [`GYMDESK.md`](GYMDESK.md) |
+| `DISCORD_BOT_TOKEN` | ✅ Set (rotate if ever exposed) |
+| `DISCORD_CHANNEL_ID` | ✅ Set (`#meetings-plans`) |
+| `DEMO_MODE` | ✅ `false` |
+| `ALLOWED_ORIGINS` | ✅ Includes `https://gparrine.github.io` |
+| `API_ACCESS_KEY` | ✅ Set — must match GitHub `VITE_API_ACCESS_KEY` |
+| `GEMINI_API_KEY` | ✅ Set |
+| `MEETUP_GROUP_URLNAME` | ✅ Set (e.g. `einhorn-la-medieval-martial-arts`) |
+| `FACEBOOK_GROUP_URL` | ✅ Set (if using Facebook) |
+| `GYMDESK_OPEN_URL` | Optional — bookmarked schedule URL recommended |
+| `MEETUP_API_KEY` | Optional — Meetup Pro OAuth for automatic event description updates |
 
-**Local dev:** copy [`backend/.env.example`](../backend/.env.example) → `backend/.env` (gitignored).
+**GitHub Actions variables** (Settings → Actions → Variables):
+
+| Variable | Status |
+|---|---|
+| `VITE_API_URL` | ✅ Render API URL (no trailing slash) |
+| `VITE_API_ACCESS_KEY` | ✅ Same value as Render `API_ACCESS_KEY` |
+
+**Local dev:** copy [`backend/.env.example`](../backend/.env.example) → `backend/.env`; optional `frontend/.env.local` with `VITE_API_ACCESS_KEY` if backend key is set.
 
 ---
 
-## What we built today
+## Session log (2026-06-24 → 2026-06-26)
 
-1. Full **Einhorn Postmaster** UI (rich text, AI refine button, 4 platform buttons, Send All, embed/link)
-2. **Express backend** with platform services + demo mode
-3. **Render** deployment (`npm ci` + `tsx` start — no compile step)
-4. **GitHub Pages** deployment (workflow: `.github/workflows/deploy-pages.yml`)
-5. **Discord** live integration to `#meetings-plans`
-6. Official **logo** PNG in header
-7. Docs: [`DEPLOY.md`](DEPLOY.md), this record
+1. **Core app** — Rich text editor, emoji picker (gold unicorn), Refine with AI, 4 platform buttons, Send to All, embed/link share
+2. **Discord** — Live posting to `#meetings-plans`
+3. **Facebook / Meetup / Gymdesk** — Manual-assist (copy + open browser); Meetup month/day date parsing
+4. **Send to All fixes** — Popup blocker workaround → copy once + results dialog with open links
+5. **Meetup URL fix** — Normalizes full Meetup URL or slug in `MEETUP_GROUP_URLNAME`
+6. **Instructor guide** — [`INSTRUCTOR_GUIDE.md`](INSTRUCTOR_GUIDE.md)
+7. **Security pass** — Helmet, CORS hardening, health endpoint simplified, doc redaction ([`PR #32`](https://github.com/Gparrine/Einhorn_Post_Master/pull/32))
+8. **API access key speed bump** — `X-API-Key` on `/api/refine` and `/api/post` ([`PR #35`](https://github.com/Gparrine/Einhorn_Post_Master/pull/35))
+9. **Unauthorized fix** — Matching `VITE_API_ACCESS_KEY` + Pages redeploy; trim keys, OPTIONS preflight ([`PR #37`](https://github.com/Gparrine/Einhorn_Post_Master/pull/37))
 
 ---
 
@@ -65,34 +80,26 @@ Configured on **einhorn-postmaster-api**:
 - Rotate Discord bot tokens and API keys if they are ever exposed outside Render.
 - Never commit `.env`, tokens, or API keys to GitHub.
 - `API_ACCESS_KEY` / `VITE_API_ACCESS_KEY` reduce casual abuse but are visible in the published frontend — not a substitute for full login auth.
+- If Refine or post returns **Unauthorized**, check matching keys on Render + GitHub and **re-run Deploy to GitHub Pages**.
 
 ---
 
-## Next session — recommended order
+## Troubleshooting quick reference
 
-### Phase 2: Gemini Gem (AI Refine)
+| Symptom | Fix |
+|---|---|
+| `Unauthorized` on refine/post | Match `API_ACCESS_KEY` (Render) and `VITE_API_ACCESS_KEY` (GitHub); redeploy Pages |
+| Meetup opens wrong URL | Use slug only or full group URL in `MEETUP_GROUP_URLNAME` (both supported) |
+| Send to All — only Discord works | Use the post-send dialog links; paste on each site |
+| Gemini fails | Confirm `GEMINI_API_KEY` on Render (separate from `API_ACCESS_KEY`) |
 
-See **[docs/GEMINI.md](GEMINI.md)** for full setup.
+---
 
-1. [Google AI Studio](https://aistudio.google.com/apikey) → create API key → Render `GEMINI_API_KEY`
-2. Paste Gem instructions into [`backend/prompts/einhorn-gem.prompt.md`](../backend/prompts/einhorn-gem.prompt.md) (or Render `GEMINI_SYSTEM_PROMPT`)
-3. Test **Refine with AI** on live app
+## Optional future work
 
-### Phase 3: Facebook
-
-- Meta removed group posting API (April 2024)
-- Implement **manual-assist** (copy text + open group) unless you choose browser automation
-
-### Phase 4: Gymdesk
-
-- Update scheduled class **Description** tab for date-matched session
-- Likely manual-assist or Playwright automation — no documented public write API
-
-### Phase 5: Meetup ✅
-
-- Manual-assist with `MEETUP_GROUP_URLNAME` (copy + open events page)
-- Optional API with `MEETUP_API_KEY` (Meetup Pro OAuth) — GraphQL `editEvent` updates description
-- See [`MEETUP.md`](MEETUP.md)
+1. **Meetup automatic API** — Add `MEETUP_API_KEY` (Meetup Pro OAuth) for GraphQL `editEvent`
+2. **Stronger auth** — Login/OAuth if API abuse becomes a concern (API key is only a speed bump)
+3. **Instructor guide** — Add “why Discord is automatic / stay signed in” section if not yet on `main`
 
 ---
 
@@ -114,18 +121,14 @@ npm run dev           # frontend :5173 + backend :3001
 |---|---|
 | [`frontend/`](../../frontend/) | React UI |
 | [`backend/`](../../backend/) | Express API |
+| [`backend/src/middleware/apiKeyAuth.ts`](../backend/src/middleware/apiKeyAuth.ts) | API access key speed bump |
+| [`backend/src/services/discord.ts`](../backend/src/services/discord.ts) | Discord integration |
+| [`backend/src/services/gemini.ts`](../backend/src/services/gemini.ts) | AI refine |
+| [`backend/src/services/meetup.ts`](../backend/src/services/meetup.ts) | Meetup manual-assist + optional API |
+| [`frontend/src/components/SendAllResultsDialog.tsx`](../frontend/src/components/SendAllResultsDialog.tsx) | Send to All next-steps dialog |
+| [`docs/INSTRUCTOR_GUIDE.md`](INSTRUCTOR_GUIDE.md) | Instructor handoff |
+| [`docs/DEPLOY.md`](DEPLOY.md) | Deployment guide |
 | [`render.yaml`](../render.yaml) | Render Blueprint |
-| [`docs/DEPLOY.md`](DEPLOY.md) | Step 1 deployment guide |
-| [`backend/src/services/discord.ts`](../backend/src/services/discord.ts) | Discord integration (working) |
-| [`backend/src/services/gemini.ts`](../backend/src/services/gemini.ts) | AI refine (next) |
-
----
-
-## Open decisions (unchanged)
-
-1. **Facebook:** manual-assist vs browser automation vs skip
-2. **Gymdesk:** manual-assist vs browser automation
-3. **Meetup:** set `MEETUP_GROUP_URLNAME`; add `MEETUP_API_KEY` when OAuth is ready
 
 ---
 
