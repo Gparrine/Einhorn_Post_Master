@@ -30,7 +30,7 @@ export default function SendAllResultsDialog({
         <h2 className="dialog-title">Send to All — next steps</h2>
         <p className="dialog-body">
           {copied
-            ? 'Post text is copied to your clipboard.'
+            ? 'Post copied to your clipboard with formatting, links, and emojis.'
             : 'Copy your post from the editor before pasting on each site.'}
           {' '}Discord was posted automatically. Open each link below, paste, and save.
         </p>

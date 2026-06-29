@@ -9,7 +9,7 @@ import SendAllResultsDialog, { type ManualPlatformLink } from './components/Send
 import StatusBar from './components/StatusBar'
 import SharePanel from './components/SharePanel'
 import { postToPlatform, refineWithAI } from './api/client'
-import { copyToClipboard, copyToClipboardSync } from './utils/clipboard'
+import { copyRichTextToClipboard, copyRichTextToClipboardSync } from './utils/clipboard'
 import { openUrlInNewTab } from './utils/openTab'
 import type { Platform, PlatformState, PlatformStates, PostResult } from './types'
 
@@ -91,9 +91,9 @@ function App() {
       const result = await postToPlatform(platform, htmlContent, plainText)
 
       if (result.success) {
-        if (result.mode === 'manual' && result.copyText && !options.skipManualActions) {
+        if (result.mode === 'manual' && !options.skipManualActions) {
           try {
-            await copyToClipboard(result.copyText)
+            await copyRichTextToClipboard(htmlContent, plainText)
             if (result.postUrl) {
               openUrlInNewTab(result.postUrl)
             }
@@ -147,7 +147,7 @@ function App() {
     setConfirmTarget(null)
 
     if (target === 'all') {
-      const copied = copyToClipboardSync(plainText)
+      const copied = copyRichTextToClipboardSync(htmlContent, plainText)
 
       void (async () => {
         try {
