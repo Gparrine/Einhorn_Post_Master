@@ -105,3 +105,9 @@ Expected: JSON with `"content": "<p>...</p>..."` refined HTML.
 | Uploaded knowledge files | Not yet supported — key facts are in the prompt file |
 
 Each refine runs **two mandatory web searches** (hydration history + idiom/quote) before writing the post. Examples in the prompt are forbidden outputs.
+
+Every refined post **must begin** with a fun fencing-themed title bookended by emojis:
+
+`<p><strong>🦄⚔️ Your Fun Title Here ⚔️🦄</strong></p>`
+
+This is defined in [`backend/prompts/einhorn-gem.prompt.md`](../backend/prompts/einhorn-gem.prompt.md). If you override with `GEMINI_SYSTEM_PROMPT` on Render, include the same title rule or copy the updated prompt file.
