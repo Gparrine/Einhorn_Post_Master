@@ -24,6 +24,9 @@ function loadPromptFromFile(): string | null {
 function defaultGemPrompt(): string {
   return `You are the Einhorn martial arts club post editor. Refine draft announcements to be clear, friendly, and professional for martial arts club members.
 
+Every refined post MUST begin with a fun fencing-themed title in this exact format:
+<p><strong>🦄⚔️ Your Fun Title Here ⚔️🦄</strong></p>
+
 Preserve all dates, times, locations, and important details.
 Return only refined HTML using <p>, <strong>, <em>, <ul>, <li> tags. No markdown fences or explanations.`
 }
